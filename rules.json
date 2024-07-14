@@ -1,0 +1,63 @@
+[
+    {
+        // match will find entities matching all these key-values
+        "match":
+        {
+            "classname": "monster_barney",
+            "models": "models/barney2.mdl"
+        },
+        // not_match opposite as match, requires the entity to NOT have these key-values
+        "not_match":
+        {
+            "weapons": "1"
+        },
+        // have requires the matched entity to have this keys
+        "have":
+        [
+            "body",
+            "skin"
+        ],
+        // not opposite as have, requires the entity to not have these keys
+        "not_have":
+        [
+            "spawnflags"
+        ],
+        // replace will replace all these keyvalues
+        "replace":
+        {
+            "models": "models/mymod/barney.mdl"
+        },
+        // rename will rename the key keeping the value
+        "rename":
+        {
+            "body": "bodygroup"
+        },
+        // add will add this key-vaue
+        "add":
+        {
+            "weapons": "1"
+        },
+        // remove will remove these key-value from this entity
+        "remove":
+        [
+            "skin"
+        ],
+        // new_entity wil add all these entities for each matched entity
+        "new_entity":
+        [
+            {
+                "classname": "env_sprite_follow",
+                "target": "$targetname"
+            }
+        ]
+        // Adding a dollar sign ($) means we'll use the original entity's value of the given key
+        // Example "$origin" means we'll use the origin of the matched entity.
+    },
+    {
+        // This rules will be only applied to these maps.
+        "maps": [
+            "c1a0",
+            "c1a1"
+        ]
+    }
+]
