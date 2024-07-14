@@ -12,32 +12,32 @@ import platform
 messages = {
     "press_input":
     {
-        "english": "",
+        "english": "Press Enter to exit...",
         "spanish": "Presiona Enter para salir...",
     },
     "drag_and_drop_bsp":
     {
-        "english": "",
+        "english": "Drag and drop a BSP file to the script to extract the entity data.",
         "spanish": "Arrastra y suelta un archivo BSP el script para extraer la informacion de entidades.",
     },
     "drag_and_drop_ent":
     {
-        "english": "",
+        "english": "Drag and drop a JSON file to the script to import the entity data.",
         "spanish": "Arrastra y suelta un archivo JSON a el script para importar la informacion de entidades.",
     },
     "sys_export":
     {
-        "english": "",
+        "english": "Write the absolute path to a BSP file to extract the entity data.",
         "spanish": "Escribe la ruta completa hacia un archivo BSP para exportar la informacion de entidades.",
     },
     "sys_import":
     {
-        "english": "",
+        "english": "Write the absolute path to a JSON file to import the entity data.",
         "spanish": "Escribe la ruta completa hacia un archivo JSON para importar la informacion de entidades.",
     },
     "sys_all":
     {
-        "english": "",
+        "english": "$cmd$ \"Absolute/path/to/a/folder\"",
         "spanish": "$cmd$ \"Ruta/completa/hacia/una/carpeta\"",
     },
 }
@@ -77,7 +77,8 @@ import json
 import subprocess
 
 def ripent( entdata = [] ):
-    s=''
+    # Here lazyripent's rules will be implemented.
+    return entdata
 
 def convert( maps=[] ):
 
