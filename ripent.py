@@ -49,6 +49,16 @@ messages = {
         "english": "Writting to $map$",
         "spanish": "Escribiendo en $map$",
     },
+    "apply_rules":
+    {
+        "english": "Press R and enter to apply rules.json into the BSP files. Press Enter to not.",
+        "spanish": "Presiona R y Enter para aplicar rules.json dentro de los archivos BSP. Presiona Enter para no hacerlo.",
+    },
+    "applying_rule":
+    {
+        "english": "Applying rule $index$...",
+        "spanish": "Aplicando regla $index$...",
+    },
 }
 
 syslang = locale.getlocale()
@@ -57,7 +67,7 @@ if lang.find( '_' ) != -1:
     lang = lang[ 0 : lang.find( '_' ) ]
 lang = lang.lower()
 
-def printl( msg, args={} ):
+def cornc(msg, args={}):
     msgArgs = ''
     if lang in messages.get( msg, {} ):
         msgArgs = f'{messages.get( msg, {} ).get( lang ) }'
@@ -67,16 +77,93 @@ def printl( msg, args={} ):
     if len(args) > 0:
         for key, value in args.items():
             msgArgs = msgArgs.replace( f'${key}$', value )
+    return msgArgs
 
-    print(f'{msgArgs}\n')
+def printl( msg, args={} ):
+    print(f'{cornc(msg, args)}\n')
+
+def log( msg, args={} ):
+    print(f'{cornc(msg, args)}')
 
 #========================================================================
 #======================== Rules logic
 #========================================================================
 
+def get_rules():
+
+    js = {}
+
+    with open( os.path.abspath( 'rules.json' ), 'r' ) as file:
+
+        jsdata = ''
+        lines = file.readlines()
+
+        for t, line in enumerate( lines ):
+
+            line = line.strip()
+
+            if line and line != '' and not line.startswith( '//' ):
+                jsdata = f'{jsdata}\n{line}'
+
+        js = json.loads( jsdata )
+        file.close()
+
+    return js
+
+def wildcard( _f, _t ):
+
+    if _f == _t or _f.startswith('*') and _t.endswith(_f[1:]) or _f.endswith('*') and _t.startswith(_f[:len(_f)-1]):
+        return True
+    return False
+
+def is_matched( entblock = {} ):
+
+    rules_list = get_rules()
+
+    selectors = 0   # Rule selectors wants
+    passed = 0      # Entity matches rules selectors
+
+    for i, rules in enumerate(rules_list):
+
+        if 'match' in rules:
+            for k, v in rules.get( 'match', {} ).items():
+                selectors+=1
+                if k in entblock and wildcard( v, entblock.get( k, '' ) ):
+                    passed +=1
+        if 'not_match' in rules:
+            for k, v in rules.get( 'not_match', {} ).items():
+                selectors+=1
+                if not k in entblock and not wildcard( v, entblock.get( k, '' ) ):
+                    passed +=1
+        if 'have' in rules:
+            for k in rules.get( 'have', [] ):
+                selectors+=1
+                if k in entblock:
+                    passed +=1
+        if 'not_have' in rules:
+            for k in rules.get( 'not_have', [] ):
+                selectors+=1
+                if not k in entblock:
+                    passed +=1
+    if selectors > 0 and passed == selectors:
+        log(f'applying_rule', { "index": str(i) } )
+        return True
+    return False
 
 def ripent( entdata = [] ):
-    # Here lazyripent's rules will be implemented.
+
+    NewEntData = []
+
+    for entblock in entdata:
+
+        # matched all selectors, aplying actions
+        if is_matched( entblock ):
+            # -TODO
+            NewEntData.append(entblock)
+            continue
+
+        NewEntData.append(entblock)
+
     return entdata
 
 #========================================================================
@@ -101,6 +188,16 @@ def bsp_read( bsp_name, writedata = None ):
     return None
 
 def convert( maps=[] ):
+
+    APPLY_RULES = False
+
+    if maps[0].endswith( '.json' ):
+
+        printl('apply_rules')
+        ApplyRules = input()
+
+        if ApplyRules.upper() == 'R':
+            APPLY_RULES = True
 
     for map in maps:
 
@@ -182,7 +279,11 @@ def convert( maps=[] ):
 
             with open( map, 'r' ) as jsonfile:
 
-                entitydata = ripent( entdata = json.load( jsonfile ) )
+                entitydata = json.load( jsonfile )
+
+                if APPLY_RULES:
+                    entitydata = ripent( entdata = entitydata )
+
                 newdata = ''
 
                 for entblock in entitydata:
@@ -195,7 +296,7 @@ def convert( maps=[] ):
 
                 bsp_read( map.replace( '.json', '.bsp' ), writedata=newdata )
 
-            os.remove( map )
+            #os.remove( map )
 
 #========================================================================
 #======================== Inputs
