@@ -1,7 +1,6 @@
-
-
 import os
 import sys
+import json
 import locale
 import platform
 
@@ -40,6 +39,16 @@ messages = {
         "english": "$cmd$ \"Absolute/path/to/a/folder\"",
         "spanish": "$cmd$ \"Ruta/completa/hacia/una/carpeta\"",
     },
+    "skipping_map":
+    {
+        "english": "Something went wrong, Skipping map $map$",
+        "spanish": "Algo salio mal, Saltando mapa $map$",
+    },
+    "writting_map":
+    {
+        "english": "Writting to $map$",
+        "spanish": "Escribiendo en $map$",
+    },
 }
 
 syslang = locale.getlocale()
@@ -62,23 +71,34 @@ def printl( msg, args={} ):
     print(f'{msgArgs}\n')
 
 #========================================================================
-#======================== Use the proper tool
+#======================== Rules logic
 #========================================================================
 
-OS = int(platform.architecture()[0][:2])
-ripbits = 'Ripent_x64' if ( OS == 64 ) else 'Ripent'
-RIPENT = f'{os.path.abspath( "" )}\\{ripbits}.exe'
+
+def ripent( entdata = [] ):
+    # Here lazyripent's rules will be implemented.
+    return entdata
 
 #========================================================================
 #======================== Formatting logic
 #========================================================================
 
-import json
-import subprocess
+def bsp_read( bsp_name, writedata = None ):
 
-def ripent( entdata = [] ):
-    # Here lazyripent's rules will be implemented.
-    return entdata
+    with open( bsp_name, 'r+b' ) as bsp_file:
+        bsp_file.read(4) # BSP version.
+        read_start = int.from_bytes( bsp_file.read(4), byteorder='little' )
+        read_len = int.from_bytes( bsp_file.read(4), byteorder='little' )
+        bsp_file.seek( read_start )
+
+        if writedata != None:
+            bsp_file.write( writedata.encode() )
+            if len( writedata ) < read_len:
+                bsp_file.write( b'\x00' * (read_len - len( writedata ) ) )
+        else:
+            entities_lump = bsp_file.read( read_len )
+            return entities_lump.decode('ascii').splitlines()
+    return None
 
 def convert( maps=[] ):
 
@@ -86,50 +106,48 @@ def convert( maps=[] ):
 
         if map.endswith( '.bsp' ):
 
-            print( f'{RIPENT}')
-            print( f'{map}')
-            subprocess.call( [ RIPENT, "-export", map ], stdout = open( os.devnull, "wb" ) )
-
             entdata = []
 
-            with open( map.replace( '.bsp', '.ent' ), 'r', errors='ignore' ) as entfile:
+            lines = bsp_read( map )
 
-                lines = entfile.readlines()
+            if lines == None:
+                printl('skipping_map', { 'map': map } )
+                continue
 
-                entity = {}
-                oldline = ''
+            entity = {}
+            oldline = ''
 
-                for line in lines:
+            for line in lines:
 
-                    if line == '{':
-                        continue
+                if line == '{':
+                    continue
 
-                    line = line.strip()
+                line = line.strip()
 
-                    if not line.endswith( '"' ):
-                        oldline = line
-                    elif oldline != '' and not line.startswith( '"' ):
-                        line = f'{oldline}{line}'
+                if not line.endswith( '"' ):
+                    oldline = line
+                elif oldline != '' and not line.startswith( '"' ):
+                    line = f'{oldline}{line}'
 
-                    if line.find( '\\' ) != -1:
-                        line = line.replace( '\\', '\\\\' )
+                if line.find( '\\' ) != -1:
+                    line = line.replace( '\\', '\\\\' )
 
-                    line = line.strip( '"' )
+                line = line.strip( '"' )
 
-                    if not line or line == '':
-                        continue
+                if not line or line == '':
+                    continue
 
-                    if line.startswith( '}' ): # startswith due to [NULL]
-                        entdata.append( json.dumps( entity ) )
-                        entity.clear()
-                    else:
-                        keyvalues = line.split( '" "' )
-                        if len( keyvalues ) == 2:
-                            entity[ keyvalues[0] ] = keyvalues[1]
-
-                entfile.close()
+                if line.startswith( '}' ): # startswith due to [NULL]
+                    entdata.append( json.dumps( entity ) )
+                    entity.clear()
+                else:
+                    keyvalues = line.split( '" "' )
+                    if len( keyvalues ) == 2:
+                        entity[ keyvalues[0] ] = keyvalues[1]
 
             with open( map.replace( '.bsp', '.json' ), 'w' ) as jsonfile:
+
+                printl('writting_map', { 'map': map.replace( '.bsp', '.json' ) } )
 
                 jsonfile.write( '[\n' )
                 FirstBlockOf = True
@@ -138,7 +156,6 @@ def convert( maps=[] ):
                 for entblock in entdata:
 
                     if FirstBlockOf:
-                        jsonfile.write( '\n' )
                         FirstBlockOf = False
                     else:
                         jsonfile.write( ',\n' )
@@ -161,23 +178,24 @@ def convert( maps=[] ):
                 jsonfile.write( '\n]\n' )
                 jsonfile.close()
 
-            os.remove( map.replace( '.bsp', '.ent' ) )
+        elif map.endswith( '.json' ) and os.path.exists( map.replace( '.json', '.bsp' ) ):
 
-        elif map.endswith( '.json' ):
-
-            with open( map, 'r' ) as jsonfile, open( map.replace( '.json', '.ent' ), 'w' ) as entfile:
+            with open( map, 'r' ) as jsonfile:
 
                 entitydata = ripent( entdata = json.load( jsonfile ) )
+                newdata = ''
 
                 for entblock in entitydata:
-                    entfile.write( '{\n' )
+                    newdata += '{\n'
                     for key, value in entblock.items():
-                        entfile.write( f'"{key}" "{value}"\n' )
-                    entfile.write( '}\n' )
+                        newdata += f'"{key}" "{value}"\n'
+                    newdata += '}\n'
+
+                printl('writting_map', { 'map': map.replace( '.json', '.bsp' ) } )
+
+                bsp_read( map.replace( '.json', '.bsp' ), writedata=newdata )
 
             os.remove( map )
-            subprocess.call( [ RIPENT, "-import", map ], stdout = open( os.devnull, "wb" ) )
-            os.remove( map.replace( '.json', '.ent' ) )
 
 #========================================================================
 #======================== Inputs
