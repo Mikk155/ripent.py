@@ -107,7 +107,18 @@ The entity MUST have the following values defined.
 ```
 The entity MUST NOT have the following values defined.
 
-> NOTE: match and not_match are special and support initial and final wildcarding with an asterisk <span style="color:rgb( 0, 255, 0 );">*</span>
+### <span style="color:rgb( 0, 255, 0 );">maps</span>
+
+```json
+"maps":
+[
+    "c1a0",
+    "c1a1"
+]
+```
+The map MUST be named one of these.
+
+> NOTE: maps, match and not_match are special and support initial and final wildcarding with an asterisk <span style="color:rgb( 0, 255, 0 );">*</span>
 
 ### <span style="color:rgb( 0, 255, 0 );">have</span>
 
@@ -129,17 +140,6 @@ The entity MUST have these keys, regardless of their value.
 ]
 ```
 The entity MUST NOT have these keys, regardless of their value.
-
-### <span style="color:rgb( 0, 255, 0 );">maps</span>
-
-```json
-"maps":
-[
-    "c1a0",
-    "c1a1"
-]
-```
-The map MUST be named one of these.
 
 # <span style="color:rgb( 255, 0, 0 );">Actions</span>
 
@@ -323,7 +323,18 @@ La entidad DEBE tener los siguientes valores definidos.
 ```
 La entidad NO DEBE tener los siguientes valores definidos.
 
-> NOTA: match y not_match son especiales y soportan wildcarding inicial y final con un asterisco <span style="color:rgb( 0, 255, 0 );">*</span>
+### <span style="color:rgb( 0, 255, 0 );">maps</span>
+
+```json
+"maps":
+[
+    "c1a0",
+    "c1a1"
+]
+```
+El mapa DEBE llamarse igual a uno de estos.
+
+> NOTA: maps, match y not_match son especiales y soportan wildcarding inicial y final con un asterisco <span style="color:rgb( 0, 255, 0 );">*</span>
 
 ### <span style="color:rgb( 0, 255, 0 );">have</span>
 
@@ -345,17 +356,6 @@ La entidad DEBE tener estas keys, no importa su valor.
 ]
 ```
 La entidad NO DEBE tener estas keys, no importa su valor.
-
-### <span style="color:rgb( 0, 255, 0 );">maps</span>
-
-```json
-"maps":
-[
-    "c1a0",
-    "c1a1"
-]
-```
-El mapa DEBE llamarse igual a uno de estos.
 
 # <span style="color:rgb( 255, 0, 0 );">Acciones</span>
 
