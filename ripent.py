@@ -2,7 +2,9 @@ import os
 import sys
 import json
 import locale
-import platform
+
+# Delete json files when importing data
+DeleteJson = False
 
 #========================================================================
 #======================== Message stuff
@@ -116,55 +118,105 @@ def wildcard( _f, _t ):
         return True
     return False
 
-def is_matched( entblock = {} ):
-
-    rules_list = get_rules()
+def is_matched( entblock = {}, rules = {}, i = 0, mapname='' ):
 
     selectors = 0   # Rule selectors wants
     passed = 0      # Entity matches rules selectors
 
-    for i, rules in enumerate(rules_list):
+    if 'match' in rules:
+        for k, v in rules.get( 'match', {} ).items():
+            selectors+=1
+            if k in entblock and wildcard( v, entblock.get( k, '' ) ):
+                passed +=1
+    if 'not_match' in rules:
+        for k, v in rules.get( 'not_match', {} ).items():
+            selectors+=1
+            if not k in entblock and not wildcard( v, entblock.get( k, '' ) ):
+                passed +=1
+    if 'have' in rules:
+        for k in rules.get( 'have', [] ):
+            selectors+=1
+            if k in entblock:
+                passed +=1
+    if 'not_have' in rules:
+        for k in rules.get( 'not_have', [] ):
+            selectors+=1
+            if not k in entblock:
+                passed +=1
 
-        if 'match' in rules:
-            for k, v in rules.get( 'match', {} ).items():
-                selectors+=1
-                if k in entblock and wildcard( v, entblock.get( k, '' ) ):
+    if 'maps' in rules and len( rules.get( 'maps', [] ) ) > 0:
+        selectors+=1
+        map_name = mapname[ : mapname.rfind( '.json' ) ]
+        if map_name.find( '\\' ) != -1:
+            map_name = map_name[ map_name.rfind( '\\' ) +1 : ]
+        if map_name.find( '/' ) != -1:
+            map_name = map_name[ map_name.rfind( '/' ) +1 : ]
+        if map_name in rules.get( 'maps', [] ):
+            passed +=1
+        else:
+            for map in rules.get( 'maps', [] ):
+                if wildcard( map, map_name ):
                     passed +=1
-        if 'not_match' in rules:
-            for k, v in rules.get( 'not_match', {} ).items():
-                selectors+=1
-                if not k in entblock and not wildcard( v, entblock.get( k, '' ) ):
-                    passed +=1
-        if 'have' in rules:
-            for k in rules.get( 'have', [] ):
-                selectors+=1
-                if k in entblock:
-                    passed +=1
-        if 'not_have' in rules:
-            for k in rules.get( 'not_have', [] ):
-                selectors+=1
-                if not k in entblock:
-                    passed +=1
+                    break
+
     if selectors > 0 and passed == selectors:
         log(f'applying_rule', { "index": str(i) } )
         return True
     return False
 
-def ripent( entdata = [] ):
+def ripent( entdata = [], mapname = '' ):
 
     NewEntData = []
 
     for entblock in entdata:
 
-        # matched all selectors, aplying actions
-        if is_matched( entblock ):
-            # -TODO
+        SaveEntity = True
+        rules_list = get_rules()
+
+        for i, rules in enumerate(rules_list):
+
+            # matched all selectors, aplying actions
+            if is_matched( entblock=entblock, rules=rules, i=i, mapname=mapname ):
+
+                OldEntBlock = entblock.copy() # Used for value-copying
+
+                if 'delete' in rules and rules.get( 'delete', False ):
+                    SaveEntity = False
+                    break
+
+                if 'new_entity' in rules:
+                    for e in rules.get( 'new_entity', [] ):
+                        if len(e) > 0:
+                            for k, v in e.items():
+                                if v.startswith( '$' ):
+                                    e[ k ] = OldEntBlock.get( v[1:], '' )
+                            NewEntData.append(e)
+
+                if 'replace' in rules:
+                    for k, v in rules.get( 'replace', {} ).items():
+                        entblock[ k ] = OldEntBlock.get( v[1:], '' ) if v.startswith( '$' ) else v
+
+                if 'rename' in rules:
+                    for k, v in rules.get( 'rename', {} ).items():
+                        entblock.pop( k, '' )
+                        entblock[ v ] = OldEntBlock.get( k, '' )
+
+                if 'add' in rules:
+                    for k, v in rules.get( 'add', {} ).items():
+                        entblock[ k ] = OldEntBlock.get( v[1:], '' ) if v.startswith( '$' ) else v
+
+                if 'remove' in rules:
+                    for k in rules.get( 'remove', [] ):
+                        entblock.pop( k, '' )
+
+                if len(entblock) == 0: # Somehow a empty entity ended here
+                    SaveEntity = False
+                    break
+
+        if SaveEntity:
             NewEntData.append(entblock)
-            continue
 
-        NewEntData.append(entblock)
-
-    return entdata
+    return NewEntData
 
 #========================================================================
 #======================== Formatting logic
@@ -296,7 +348,7 @@ def convert( maps=[] ):
                 entitydata = json.load( jsonfile )
 
                 if APPLY_RULES:
-                    entitydata = ripent( entdata = entitydata )
+                    entitydata = ripent( entdata = entitydata, mapname=map )
 
                 newdata = ''
 
@@ -310,7 +362,8 @@ def convert( maps=[] ):
 
                 bsp_read( map.replace( '.json', '.bsp' ), writedata=newdata )
 
-            #os.remove( map )
+            if DeleteJson:
+                os.remove( map )
 
 #========================================================================
 #======================== Inputs
