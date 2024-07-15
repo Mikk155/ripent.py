@@ -4,7 +4,7 @@ import json
 import locale
 
 # Delete json files when importing data
-DeleteJson = False
+DeleteJson = True
 
 #========================================================================
 #======================== Message stuff
