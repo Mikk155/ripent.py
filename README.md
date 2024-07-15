@@ -20,7 +20,7 @@
 
 - [Zode](https://github.com/Zode)
 - omamfan
-- Erty
+- [Erty](https://github.com/Erty-Gamedev)
 
 ---
 > NOTE: <span style="color:rgb( 255, 0, 0);"> It is recommended to use a decent program if you are not familiar with JSON, as these will show you your errors if you make any. [Visual Studio Code](https://code.visualstudio.com/) is recommended.</span>
