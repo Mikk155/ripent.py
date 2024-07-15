@@ -143,6 +143,13 @@ The map MUST be named one of these.
 
 # <span style="color:rgb( 255, 0, 0 );">Actions</span>
 
+### <span style="color:rgb( 0, 255, 0 );">delete</span>
+
+```json
+"delete": true
+```
+Deletes the entity
+
 ### <span style="color:rgb( 0, 255, 0 );">replace</span>
 
 ```json
@@ -163,7 +170,7 @@ Replaces the value of a key.
 ```
 Renames the key while keeping the original value.
 
-### <span style="color:rgb( 0, 255, 0 );">rename</span>
+### <span style="color:rgb( 0, 255, 0 );">add</span>
 
 ```json
 "add":
@@ -173,7 +180,7 @@ Renames the key while keeping the original value.
 ```
 Adds a new key-value pair.
 
-### <span style="color:rgb( 0, 255, 0 );">rename</span>
+### <span style="color:rgb( 0, 255, 0 );">remove</span>
 
 ```json
 "remove":
@@ -183,7 +190,7 @@ Adds a new key-value pair.
 ```
 Removes the key and its value.
 
-### <span style="color:rgb( 0, 255, 0 );">rename</span>
+### <span style="color:rgb( 0, 255, 0 );">new_entity</span>
 
 ```json
 "new_entity":
@@ -203,6 +210,11 @@ In some cases, you can use a dollar sign <span style="color:rgb( 0, 255, 0 );">$
 > For example: <span style="color:rgb( 0, 255, 0 );">"body": "$bodygroup"</span>
 
 In this case, we are copying the existing value in the "bodygroup" key.
+
+That feature works for the values of:
+- new_entity
+- replace
+- add
 
 ---
 
@@ -347,6 +359,13 @@ El mapa DEBE llamarse igual a uno de estos.
 
 # <span style="color:rgb( 255, 0, 0 );">Acciones</span>
 
+### <span style="color:rgb( 0, 255, 0 );">delete</span>
+
+```json
+"delete": true
+```
+Elimina la entidad
+
 ### <span style="color:rgb( 0, 255, 0 );">replace</span>
 
 ```json
@@ -367,7 +386,7 @@ Reemplaza el valor de una key.
 ```
 Cambia el nombre de la key manteniendo el valor original.
 
-### <span style="color:rgb( 0, 255, 0 );">rename</span>
+### <span style="color:rgb( 0, 255, 0 );">add</span>
 
 ```json
 "add":
@@ -377,7 +396,7 @@ Cambia el nombre de la key manteniendo el valor original.
 ```
 Añade una key-value nueva.
 
-### <span style="color:rgb( 0, 255, 0 );">rename</span>
+### <span style="color:rgb( 0, 255, 0 );">remove</span>
 
 ```json
 "remove":
@@ -387,7 +406,7 @@ Añade una key-value nueva.
 ```
 Elimina el valor y la key.
 
-### <span style="color:rgb( 0, 255, 0 );">rename</span>
+### <span style="color:rgb( 0, 255, 0 );">new_entity</span>
 
 ```json
 "new_entity":
@@ -408,5 +427,10 @@ En algunos casos puedes utilizar un signo de dolar <span style="color:rgb( 0, 25
 > por ejemplo: <span style="color:rgb( 0, 255, 0 );">``"body": "$bodygroup"``</span>
 
 En este caso estamos copiando el valor existente en la key "bodygroup"
+
+Esta mecanica funciona con los valores de:
+- new_entity
+- replace
+- add
 
 ---
