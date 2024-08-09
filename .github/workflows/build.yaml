@@ -26,8 +26,6 @@ jobs:
       - name: Build Executable
         run: pyinstaller --onefile ripent.py
 
-      - name: Publish ripent
-
       - name: Release
         uses: xresloader/upload-to-github-release@v1.6.0
         with:
