@@ -8,7 +8,7 @@ on:
       - '.github/workflows/build.yaml'
 
 env:
-  VERSION: "1.0"
+  VERSION: "1.5"
   USER: Mikk155
   REPOSITORY: ripent.py
 
@@ -35,7 +35,6 @@ jobs:
           token: ${{ secrets.TOKEN }}
           target_owner: ${{ env.USER }}
           target_repo: ${{ env.REPOSITORY }}
-          update_latest_release: true
           default_release_name: "Rip Ent"
           update_release_body_path: "changelog.md"
           draft: false
