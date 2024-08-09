@@ -1,0 +1,38 @@
+name: Publish Python Package
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build.yml'
+
+env:
+  VERSION: 1.0
+  USER: Mikk155
+  REPOSITORY: ripent.py
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install pyinstaller
+        run: pip install pyinstaller
+
+      - name: Build Executable
+        run: pyinstaller --onefile ripent.py
+
+      - name: Publish ripent
+
+      - name: Release
+        uses: xresloader/upload-to-github-release@v1.6.0
+        with:
+          file: "dist/ripent.exe;ripent.py;rules.json"
+          tag_name: ${{ env.VERSION }}
+          token: ${{ secrets.TOKEN }}
+          target_owner: ${{ env.USER }}
+          target_repo: ${{ env.REPOSITORY }}
