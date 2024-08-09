@@ -1,11 +1,11 @@
-name: Publish Python Package
+name: Release
 
 on:
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/build.yml'
+      - '.github/workflows/build.yaml'
 
 env:
   VERSION: 1.0
