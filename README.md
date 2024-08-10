@@ -8,18 +8,18 @@ This is heavily inspired in [lazyripent.py](https://github.com/Zode/lazyripent)
 
 # Installing
 
-- [windows](https://github.com/Mikk155/ripent.py/releases/download/2.0/ripent.exe)
+- [windows](https://github.com/Mikk155/ripent.py/releases/download/1.0.0/ripent.exe) (1.0.0)
     - It may be threated as malware due to python being repacked within the executable
     - It is trustful, you can see the [workflows](https://github.com/Mikk155/ripent.py/actions) where it is built
     - If you still have your doubts you can always install python and use the open-source library
 
-- [python](https://github.com/Mikk155/ripent.py/releases/download/2.0/ripent.py)
+- [python](https://github.com/Mikk155/ripent.py/releases/download/2.0/ripent.py) (2.0)
     - Requires library [MikkUtils](https://github.com/Mikk155/MikkUtils) >= 0.0.4
     > ```
     > pip install MikkUtils
     > ```
 
-- [linux](https://github.com/Mikk155/ripent.py/releases/download/2.0/ripent)
+- [linux](https://github.com/Mikk155/ripent.py/releases/download/1.0.0/ripent) (1.0.0)
     - Probably the same as windows executable
     - This [workflows](https://github.com/Mikk155/ripent.py/actions) program has not been tested yet so i'm unsure if this even works
 
