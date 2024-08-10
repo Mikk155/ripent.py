@@ -1,43 +1,44 @@
-| #Trans |
-|---|
-| [English](#en) |
-| [Español](#es) |
+# About
 
-# EN
+ripent.py is a python script for exporting, importing and modifying entity data by using logic rules
 
-<span style="color:rgb( 255, 255, 0 );">
+This is heavily inspired in [lazyripent.py](https://github.com/Zode/lazyripent)
 
-### ripent.py is a utility for goldsource BSP maps.
+[![Release](https://github.com/Mikk155/ripent.py/actions/workflows/build.yaml/badge.svg?branch=main)](https://github.com/Mikk155/ripent.py/actions/workflows/build.yaml)
 
-#### This tool allows modifying the structure of entities massively through a configuration.
+# Installing
 
-</span>
+- [windows](https://github.com/Mikk155/ripent.py/releases/download/2.0/ripent.exe)
+    - It may be threated as malware due to python being repacked within the executable
+    - It is trustful, you can see the [workflows](https://github.com/Mikk155/ripent.py/actions) where it is built
+    - If you still have your doubts you can always install python and use the open-source library
 
-- <span style="background-color:rgb( 60, 50, 0 );">This script is heavily inspired by [lazyripent.py](https://github.com/Zode/lazyripent)</span>
+- [python](https://github.com/Mikk155/ripent.py/releases/download/2.0/ripent.py)
+    - Requires library [MikkUtils](https://github.com/Mikk155/MikkUtils) >= 0.0.4
+    > ```
+    > pip install MikkUtils
+    > ```
 
+- [linux](https://github.com/Mikk155/ripent.py/releases/download/2.0/ripent)
+    - Probably the same as windows executable
+    - This [workflows](https://github.com/Mikk155/ripent.py/actions) program has not been tested yet so i'm unsure if this even works
 
-## <span style="color:rgb( 0, 150, 255 );">Special Thanks to:</span>
+- rules
+    - This is a example rules made for another project that is using this tool
 
-- [Zode](https://github.com/Zode)
-- omamfan
-- [Erty](https://github.com/Erty-Gamedev)
+# Using
+
+Run the script and follow the instructions or use it in with arguments for advanced mode
+
+## Advanced mode
+
+# Logic Rules
 
 ---
-> NOTE: <span style="color:rgb( 255, 0, 0);"> It is recommended to use a decent program if you are not familiar with JSON, as these will show you your errors if you make any. [Visual Studio Code](https://code.visualstudio.com/) is recommended.</span>
-
+> NOTE: It is recommended to use a decent program if you are not familiar with JSON, as these will show you your errors if you make any. [Visual Studio Code](https://code.visualstudio.com/) is recommended.
 ---
-
-# <span style="color:rgb( 255, 255, 0 );">rules.json</span>
 
 The JSON format we will use is composed of an array of dictionaries
-
-```json
-[
-    { },
-    { },
-    { }
-]
-```
 
 Each dictionary represents a rule to be applied to the map entities.
 
@@ -52,41 +53,30 @@ graph TD;
     b["{ }"];
     b --> c["match\n{ }"];
     c --> e1["string"];
-
     b --> c2["not_match\n{ }"];
     c2 --> e2["string"];
-
     b --> c3["have\n[ ]"];
     c3 --> e4["string"];
-
     b --> c4["not_have\n[ ]"];
     c4 --> e5["string"];
-
     b --> c5["replace\n{ }"];
     c5 --> e6["string"];
-
     b --> c6["rename\n{ }"];
     c6 --> e7["string"];
-
     b --> c7["add\n{ }"];
     c7 --> e8["string"];
-
     b --> c8["remove\n[ ]"];
     c8 --> e9["string"];
-
     b --> c9["new_entity\n[ ]"];
     c9 --> e10["{ }"];
     e10 --> e10b["string"];
-
     b --> c10["maps\n[ ]"];
     c10 --> e11["string"];
 ```
 
----
+## Selectors
 
-# <span style="color:rgb( 255, 0, 0 );">Selectors</span>
-
-### <span style="color:rgb( 0, 255, 0 );">match</span>
+### match
 
 ```json
 "match":
@@ -97,7 +87,7 @@ graph TD;
 ```
 The entity MUST have the following values defined.
 
-### <span style="color:rgb( 0, 255, 0 );">not_match</span>
+### not_match
 
 ```json
 "not_match":
@@ -107,7 +97,7 @@ The entity MUST have the following values defined.
 ```
 The entity MUST NOT have the following values defined.
 
-### <span style="color:rgb( 0, 255, 0 );">maps</span>
+### maps
 
 ```json
 "maps":
@@ -118,9 +108,9 @@ The entity MUST NOT have the following values defined.
 ```
 The map MUST be named one of these.
 
-> NOTE: maps, match and not_match are special and support initial and final wildcarding with an asterisk <span style="color:rgb( 0, 255, 0 );">*</span>
+> NOTE: maps, match and not_match are special and support initial and final wildcarding with an asterisk ``*``
 
-### <span style="color:rgb( 0, 255, 0 );">have</span>
+### have
 
 ```json
 "have":
@@ -131,7 +121,7 @@ The map MUST be named one of these.
 ```
 The entity MUST have these keys, regardless of their value.
 
-### <span style="color:rgb( 0, 255, 0 );">not_have</span>
+### not_have
 
 ```json
 "not_have":
@@ -141,16 +131,16 @@ The entity MUST have these keys, regardless of their value.
 ```
 The entity MUST NOT have these keys, regardless of their value.
 
-# <span style="color:rgb( 255, 0, 0 );">Actions</span>
+## Actions
 
-### <span style="color:rgb( 0, 255, 0 );">delete</span>
+### delete
 
 ```json
 "delete": true
 ```
 Deletes the entity
 
-### <span style="color:rgb( 0, 255, 0 );">replace</span>
+### replace
 
 ```json
 "replace":
@@ -160,7 +150,7 @@ Deletes the entity
 ```
 Replaces the value of a key.
 
-### <span style="color:rgb( 0, 255, 0 );">rename</span>
+### rename
 
 ```json
 "rename":
@@ -170,7 +160,7 @@ Replaces the value of a key.
 ```
 Renames the key while keeping the original value.
 
-### <span style="color:rgb( 0, 255, 0 );">add</span>
+### add
 
 ```json
 "add":
@@ -180,7 +170,7 @@ Renames the key while keeping the original value.
 ```
 Adds a new key-value pair.
 
-### <span style="color:rgb( 0, 255, 0 );">remove</span>
+### remove
 
 ```json
 "remove":
@@ -190,7 +180,7 @@ Adds a new key-value pair.
 ```
 Removes the key and its value.
 
-### <span style="color:rgb( 0, 255, 0 );">new_entity</span>
+### new_entity
 
 ```json
 "new_entity":
@@ -204,10 +194,10 @@ Removes the key and its value.
 Creates one or more new entities.
 
 ---
-### <span style="color:rgb( 0, 255, 0 );">maintain values</span>
-In some cases, you can use a dollar sign <span style="color:rgb( 0, 255, 0 );">$</span> at the beginning to copy the original value of the entity.
+### values
+In some cases, you can use a dollar sign ``$`` at the beginning to copy the original value of the entity.
 
-> For example: <span style="color:rgb( 0, 255, 0 );">"body": "$bodygroup"</span>
+> For example: ``"body": "$bodygroup"``
 
 In this case, we are copying the existing value in the "bodygroup" key.
 
@@ -216,221 +206,10 @@ That feature works for the values of:
 - replace
 - add
 
----
-
-# ES
-
-<span style="color:rgb( 255, 255, 0 );">
-
-### ripent.py es una utilidad para los mapas BSP de goldsource.
-
-#### Esta herramienta permite modificar la estructura de las entidades masivamente mediante una configuración.
-
-</span>
-
-- <span style="background-color:rgb( 60, 50, 0 );">Este script esta fuerte mente inspirado en [lazyripent.py](https://github.com/Zode/lazyripent)</span>
-
-
-## <span style="color:rgb( 0, 150, 255 );">Agradecimientos especiales a:</span>
+# Credits
 
 - [Zode](https://github.com/Zode)
+
 - omamfan
-- Erty
 
----
-
-> NOTA:<span style="color:rgb( 255, 0, 0);"> Es recomendable usar un programa decente si no estas relacionado a json, ya que estos van a enseñarte tus errores, si cometes alguno. Se recomienda [Visual Studio Code](https://code.visualstudio.com/)</span>
-
----
-
-# <span style="color:rgb( 255, 255, 0 );">rules.json</span>
-
-El formato de json que utilizaremos esta compuesto de una array de diccionarios
-
-```json
-[
-    { },
-    { },
-    { }
-]
-```
-
-Cada diccionario representa una regla a aplicar a las entidades del mapa.
-
-Existen dos tipos de reglas los selectores y las acciones.
-
-Mientras que los selectores se encargan de "escoger" entidades las acciones se encargan de ejecutar ciertas acciones si fueron escogidas.
-
-```mermaid
-graph TD;
-    a["["] --> b["{ }"];
-    a1["]"] --> b["{ }"];
-    b["{ }"];
-    b --> c["match\n{ }"];
-    c --> e1["string"];
-
-    b --> c2["not_match\n{ }"];
-    c2 --> e2["string"];
-
-    b --> c3["have\n[ ]"];
-    c3 --> e4["string"];
-
-    b --> c4["not_have\n[ ]"];
-    c4 --> e5["string"];
-
-    b --> c5["replace\n{ }"];
-    c5 --> e6["string"];
-
-    b --> c6["rename\n{ }"];
-    c6 --> e7["string"];
-
-    b --> c7["add\n{ }"];
-    c7 --> e8["string"];
-
-    b --> c8["remove\n[ ]"];
-    c8 --> e9["string"];
-
-    b --> c9["new_entity\n[ ]"];
-    c9 --> e10["{ }"];
-    e10 --> e10b["string"];
-
-    b --> c10["maps\n[ ]"];
-    c10 --> e11["string"];
-```
-
----
-
-# <span style="color:rgb( 255, 0, 0 );">Selectores</span>
-
-### <span style="color:rgb( 0, 255, 0 );">match</span>
-
-```json
-"match":
-{
-    "classname": "monster_barney",
-    "models": "models/barney2.mdl"
-}
-```
-La entidad DEBE tener los siguientes valores definidos.
-
-### <span style="color:rgb( 0, 255, 0 );">not_match</span>
-
-```json
-"not_match":
-{
-    "weapons": "1"
-}
-```
-La entidad NO DEBE tener los siguientes valores definidos.
-
-### <span style="color:rgb( 0, 255, 0 );">maps</span>
-
-```json
-"maps":
-[
-    "c1a0",
-    "c1a1"
-]
-```
-El mapa DEBE llamarse igual a uno de estos.
-
-> NOTA: maps, match y not_match son especiales y soportan wildcarding inicial y final con un asterisco <span style="color:rgb( 0, 255, 0 );">*</span>
-
-### <span style="color:rgb( 0, 255, 0 );">have</span>
-
-```json
-"have":
-[
-    "body",
-    "skin"
-]
-```
-La entidad DEBE tener estas keys, no importa su valor.
-
-### <span style="color:rgb( 0, 255, 0 );">not_have</span>
-
-```json
-"not_have":
-[
-    "spawnflags"
-]
-```
-La entidad NO DEBE tener estas keys, no importa su valor.
-
-# <span style="color:rgb( 255, 0, 0 );">Acciones</span>
-
-### <span style="color:rgb( 0, 255, 0 );">delete</span>
-
-```json
-"delete": true
-```
-Elimina la entidad
-
-### <span style="color:rgb( 0, 255, 0 );">replace</span>
-
-```json
-"replace":
-{
-    "models": "models/mymod/barney.mdl"
-}
-```
-Reemplaza el valor de una key.
-
-### <span style="color:rgb( 0, 255, 0 );">rename</span>
-
-```json
-"rename":
-{
-    "body": "bodygroup"
-}
-```
-Cambia el nombre de la key manteniendo el valor original.
-
-### <span style="color:rgb( 0, 255, 0 );">add</span>
-
-```json
-"add":
-{
-    "weapons": "1"
-}
-```
-Añade una key-value nueva.
-
-### <span style="color:rgb( 0, 255, 0 );">remove</span>
-
-```json
-"remove":
-[
-    "skin"
-]
-```
-Elimina el valor y la key.
-
-### <span style="color:rgb( 0, 255, 0 );">new_entity</span>
-
-```json
-"new_entity":
-[
-    {
-        "classname": "env_sprite_follow",
-        "target": "$targetname"
-    }
-]
-```
-Crea una o varias entidades nuevas.
-
----
-
-### <span style="color:rgb( 0, 255, 0 );">mantener valores</span>
-En algunos casos puedes utilizar un signo de dolar <span style="color:rgb( 0, 255, 0 );">$</span> al inicio para copiar el valor original de la entidad.
-
-> por ejemplo: <span style="color:rgb( 0, 255, 0 );">``"body": "$bodygroup"``</span>
-
-En este caso estamos copiando el valor existente en la key "bodygroup"
-
-Esta mecanica funciona con los valores de:
-- new_entity
-- replace
-- add
-
----
+- [Erty](https://github.com/Erty-Gamedev)
