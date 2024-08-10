@@ -44,6 +44,7 @@ jobs:
           update_release_body_path: "changelog.md"
           draft: false
           prerelease: false
+          update_latest_release: false
 
   Linux:
     needs: Windows
