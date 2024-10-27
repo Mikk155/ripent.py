@@ -1,3 +1,5 @@
+# On hiatus until the library hlunity.py is fully done.
+
 # About
 
 ripent.py is a python script for exporting, importing and modifying entity data by using logic rules
