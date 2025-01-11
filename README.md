@@ -1,4 +1,6 @@
-# On hiatus until the library hlunity.py is fully done.
+# Discontinued
+
+Use [LazyRipent2](https://github.com/Zode/Lazyripent2) instead, offers the same features as this does over Lazyripent 1 but it's written in C#
 
 # About
 
